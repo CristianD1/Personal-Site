@@ -22,7 +22,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sqlSelect = "SELECT ProjectName, Link, Language, SmallName, Description FROM Projects ORDER BY ProjNum DESC;";
+$sqlSelect = "SELECT ProjectName, Link, Language, SmallName, Description, DateCreated FROM Projects ORDER BY DateCreated DESC;";
 
 $projs = $conn->query($sqlSelect);
 
@@ -36,9 +36,30 @@ $projsArr = array();
 		<div class="large-12 columns">
 
 <?
+$prevYear = -1;
+$rowFlip = false;
 $inRow = 0;
 while($row = $projs->fetch_assoc()) {
 	//array_push($projsArr, array($row["ProjectName"], $row["Link"], $row["Language"], $row["SmallName"]));
+
+		$currYear = $row["DateCreated"];
+		if($currYear != $prevYear){
+			$prevYear = $currYear;
+			$rowFlip = true;
+			?>
+
+			<div class="row">
+				<div class="large-12 columns">
+					<div class="projectTextBoxTitle projectDateCreated">
+					<? echo $currYear ?>
+					</div>
+				</div>
+			</div>
+
+			<!-- <div class="row"> -->
+			<?
+			 $inRow = 2;
+		}
 
 			if($inRow == 0){
 				?>
@@ -79,6 +100,7 @@ while($row = $projs->fetch_assoc()) {
 				</div>
 				<?
 				$inRow = 0;
+				$rowFlip = false;
 			}
 
 			?>

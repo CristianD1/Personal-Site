@@ -18,7 +18,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sqlSelect = "SELECT ProjectName, Link, Language FROM Projects ORDER BY ProjNum DESC LIMIT 2;";
+$sqlSelect = "SELECT ProjectName, Link, Language FROM Projects ORDER BY DateCreated DESC LIMIT 2;";
 
 $projs = $conn->query($sqlSelect);
 
