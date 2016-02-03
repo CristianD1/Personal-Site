@@ -36,21 +36,32 @@ $projsArr = array();
 		<div class="large-12 columns">
 
 <?
+$fistElem = true;
 $prevYear = -1;
 $rowFlip = false;
+$yearArr = array();
+
 $inRow = 0;
 while($row = $projs->fetch_assoc()) {
 	//array_push($projsArr, array($row["ProjectName"], $row["Link"], $row["Language"], $row["SmallName"]));
 
 		$currYear = $row["DateCreated"];
 		if($currYear != $prevYear){
+			array_push($yearArr, $currYear);
 			$prevYear = $currYear;
 			$rowFlip = true;
 			?>
 
+			<?
+			if(!$firstElem){
+				?>
+				</div>
+				<?
+			}
+			?>
 			<div class="row">
 				<div class="large-12 columns">
-					<div class="projectTextBoxTitle projectDateCreated">
+					<div class="projectTextBoxTitle projectDateCreated" id='<?echo $currYear."projects";?>' onclick="scrollTo(<?echo $currYear;?>)">
 					<? echo $currYear ?>
 					</div>
 				</div>
@@ -60,6 +71,14 @@ while($row = $projs->fetch_assoc()) {
 			<?
 			 $inRow = 2;
 		}
+
+			if($inRow == 2){
+				?>
+				</div>
+				<?
+				$inRow = 0;
+				$rowFlip = false;
+			}
 
 			if($inRow == 0){
 				?>
@@ -94,15 +113,7 @@ while($row = $projs->fetch_assoc()) {
 			<?
 
 			$inRow ++;
-
-			if($inRow == 2){
-				?>
-				</div>
-				<?
-				$inRow = 0;
-				$rowFlip = false;
-			}
-
+			$firstElem = false;
 			?>
 
 <?
@@ -115,5 +126,33 @@ while($row = $projs->fetch_assoc()) {
 ?>
 
 <div class="separator"></div>
+
+<div class="linkSidebar">
+
+	<?
+	$yearCount = count($yearArr);
+	for($x = 0; $x < $yearCount; $x++){
+		?>
+		<div class="sidebarBubble" onclick="scrollTo(<?echo $yearArr[$x];?>)">
+			<? echo $yearArr[$x]; ?>
+		</div>
+		<?
+		if( $x != $yearCount - 1 ){
+			?>
+			<div class="sidebarConnector"> </div>
+			<?
+		}
+	}
+	?>
+
+</div>
+
+<script>
+var scrollTo = function(yearNum){
+	$('html,body').animate({ scrollTop: $("#"+yearNum+"projects").offset().top}, 500);
+    return false;
+    e.preventDefault();
+}
+</script>
 
 <? include("HeaderFooter/footer.php"); ?>
